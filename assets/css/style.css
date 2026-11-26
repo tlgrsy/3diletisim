@@ -7,26 +7,36 @@
    1. DESIGN TOKENS & CUSTOM PROPERTIES
    -------------------------------------------------------------------------- */
 :root {
-  /* Core Palette */
-  --color-bg-light: #F1F0F0;
-  --color-bg-light-elevated: #E8E6E5;
-  --color-bg-dark: #111111;
-  --color-bg-dark-elevated: #1A1A1A;
-  --color-accent: #FF4D00;
-  --color-accent-hover: #E04400;
+  /* Core Editorial Neutrals */
+  --color-bg-light: #F4F3F1;
+  --color-bg-surface: #FFFFFF;
+  --color-bg-light-elevated: #EAE8E4;
+  --color-bg-dark: #121212;
+  --color-bg-dark-elevated: #1B1B1B;
+
+  /* Primary Logo Accents */
+  --color-accent: #EE4B16;
+  --color-accent-hover: #D23E14;
+  --color-accent-red: #D9141C;
+
+  /* Secondary Logo Spectrum Accents (subtle micro-accents) */
+  --color-spectrum-blue: #0077C8;
+  --color-spectrum-green: #0A8738;
+  --color-spectrum-magenta: #E82E8A;
+  --spectrum-line: linear-gradient(90deg, #0077C8 0%, #0A8738 26%, #EE4B16 52%, #D9141C 76%, #E82E8A 100%);
 
   /* Ink & Contrast */
-  --color-ink-dark: #111111;
+  --color-ink-dark: #121212;
   --color-ink-muted: #52504E;
   --color-ink-subtle: #767370;
-  --color-ink-light: #F1F0F0;
-  --color-ink-light-muted: #A3A09D;
+  --color-ink-light: #F4F3F1;
+  --color-ink-light-muted: #A6A3A0;
 
   /* Architectural Hairline Borders */
-  --border-light: rgba(17, 17, 17, 0.12);
-  --border-light-strong: rgba(17, 17, 17, 0.28);
-  --border-dark: rgba(241, 240, 240, 0.14);
-  --border-dark-strong: rgba(241, 240, 240, 0.30);
+  --border-light: rgba(18, 18, 18, 0.11);
+  --border-light-strong: rgba(18, 18, 18, 0.26);
+  --border-dark: rgba(244, 243, 241, 0.14);
+  --border-dark-strong: rgba(244, 243, 241, 0.30);
 
   /* Typography — Global Urbanist (TR latin-ext) */
   --font-display: 'Urbanist', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -2854,5 +2864,168 @@ body.has-project-cursor .project-card__link {
   *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   18. OFFICIAL SVG LOGO, PRELOADER & SPECTRUM MICRO-ACCENTS
+   -------------------------------------------------------------------------- */
+
+/* Razor-thin 2px Logo Spectrum Architectural Hairline on Header & Footer */
+.site-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--spectrum-line);
+  z-index: 2;
+}
+
+.site-footer {
+  position: relative;
+}
+
+.site-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--spectrum-line);
+}
+
+/* Official Vector Logo Sizing */
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.brand-logo__img {
+  height: 46px;
+  width: auto;
+  display: block;
+  transition: transform var(--transition-fast);
+}
+
+.brand-logo:hover .brand-logo__img {
+  transform: translateY(-1px);
+}
+
+.footer-brand {
+  margin-bottom: 1.5rem;
+}
+
+.footer-brand__img {
+  height: 54px;
+  width: auto;
+  display: block;
+}
+
+.contact-brand-lockup {
+  margin-bottom: 1.5rem;
+}
+
+.contact-brand-lockup img {
+  height: 52px;
+  width: auto;
+}
+
+/* Prestigious SVG Barcode Logo Preloader */
+.site-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background-color: var(--color-bg-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  will-change: transform;
+  pointer-events: all;
+}
+
+.site-preloader.is-done {
+  display: none;
+  pointer-events: none;
+}
+
+.site-preloader__logo {
+  width: clamp(136px, 20vw, 196px);
+  height: auto;
+  overflow: visible;
+}
+
+.site-preloader__caption {
+  font-family: 'Urbanist', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(244, 243, 241, 0.55);
+}
+
+/* Balanced Editorial Spectrum Micro-Accents */
+.principle-card:nth-child(1) .principle-card__num {
+  color: var(--color-accent);
+}
+
+.principle-card:nth-child(2) .principle-card__num {
+  color: var(--color-spectrum-blue);
+}
+
+.principle-card:nth-child(3) .principle-card__num {
+  color: var(--color-spectrum-green);
+}
+
+.principle-card:nth-child(4) .principle-card__num {
+  color: var(--color-spectrum-magenta);
+}
+
+.deliverables__list .deliverable-tag:nth-child(4n + 2)::before {
+  background-color: var(--color-spectrum-blue);
+}
+
+.deliverables__list .deliverable-tag:nth-child(4n + 3)::before {
+  background-color: var(--color-spectrum-green);
+}
+
+.deliverables__list .deliverable-tag:nth-child(4n + 4)::before {
+  background-color: var(--color-spectrum-magenta);
+}
+
+.client-chip:nth-child(4n + 2):hover {
+  border-color: var(--color-spectrum-blue);
+  color: var(--color-spectrum-blue);
+}
+
+.client-chip:nth-child(4n + 3):hover {
+  border-color: var(--color-spectrum-green);
+  color: var(--color-spectrum-green);
+}
+
+.client-chip:nth-child(4n + 4):hover {
+  border-color: var(--color-spectrum-magenta);
+  color: var(--color-spectrum-magenta);
+}
+
+/* Pure White Surface for Contact Form & Elevated Editorial Clarity */
+.contact-form-box {
+  background-color: var(--color-bg-surface);
+  box-shadow: 0 18px 48px rgba(18, 18, 18, 0.04);
+}
+
+@media (max-width: 640px) {
+  .brand-logo__img {
+    height: 38px;
+  }
+
+  .footer-brand__img {
+    height: 46px;
   }
 }
