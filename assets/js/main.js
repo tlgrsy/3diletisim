@@ -191,6 +191,7 @@
   function initServicesList() {
     const rows = Array.from(document.querySelectorAll('.service-row'));
     const previewBox = document.getElementById('service-preview-box');
+    const previewImg = document.getElementById('service-preview-img');
     const previewCode = document.getElementById('service-preview-code');
     const previewName = document.getElementById('service-preview-name');
     const previewNote = document.getElementById('service-preview-note');
@@ -206,8 +207,14 @@
       const title = row.dataset.serviceTitle || '';
       const note = row.dataset.serviceNote || '';
       const visualNote = row.dataset.serviceVisual || '';
+      const imgSrc = row.dataset.serviceImg || '';
 
-      if (previewCode) previewCode.textContent = `HİZMET ${num} / 08 — [IMG-05]`;
+      if (previewImg && imgSrc && previewImg.getAttribute('src') !== imgSrc) {
+        previewImg.setAttribute('src', imgSrc);
+        previewImg.setAttribute('alt', `${title} — 3D İletişim Hizmetleri`);
+      }
+
+      if (previewCode) previewCode.textContent = `HİZMET ${num} / 08`;
       if (previewName) previewName.textContent = title;
       if (previewNote) previewNote.textContent = note;
       if (previewSlotDesc && visualNote) previewSlotDesc.textContent = visualNote;
