@@ -40,7 +40,6 @@
     const gsap = window.gsap;
     const path = window.location.pathname || '';
     const isHomePage = path === '/' || path.endsWith('/index.html') || path === '';
-    const alreadySeen = window.sessionStorage.getItem(PRELOADER_SESSION_KEY) === '1';
 
     // Failsafe so the curtain can never remain stuck
     const failsafeTimer = window.setTimeout(finishPreloader, 3000);
@@ -49,21 +48,13 @@
     const wordmark = preloader.querySelector('.logo-wordmark');
     const caption = preloader.querySelector('.site-preloader__caption');
 
-    // On internal subpages after first entry, do a sleek fast curtain reveal
-    if (!isHomePage && alreadySeen) {
-      gsap.to(preloader, {
-        yPercent: -100,
-        duration: 0.45,
-        ease: 'expo.inOut',
-        onComplete: () => {
-          window.clearTimeout(failsafeTimer);
-          finishPreloader();
-        }
-      });
-      return;
-    }
+    // Full equalizer animation on homepage (~1.45s) and crisp animated equalizer on subpages (~0.95s)
+    const barDuration = isHomePage ? 0.44 : 0.28;
+    const barStagger = isHomePage ? 0.03 : 0.018;
+    const wordmarkDuration = isHomePage ? 0.34 : 0.24;
+    const holdDelay = isHomePage ? '+=0.16' : '+=0.08';
+    const curtainDuration = isHomePage ? 0.56 : 0.44;
 
-    // Full prestigious barcode equalizer loader animation (~1.5s)
     const tl = gsap.timeline({
       onComplete: () => {
         window.clearTimeout(failsafeTimer);
@@ -80,8 +71,8 @@
 
     tl.to(bars, {
       scaleY: 1,
-      duration: 0.45,
-      stagger: 0.032,
+      duration: barDuration,
+      stagger: barStagger,
       ease: 'power3.out'
     })
       .to(
@@ -89,29 +80,29 @@
         {
           opacity: 1,
           y: 0,
-          duration: 0.35,
+          duration: wordmarkDuration,
           ease: 'power2.out'
         },
-        '-=0.22'
+        '-=0.2'
       )
       .to(
         caption || {},
         {
           opacity: 1,
           y: 0,
-          duration: 0.28,
+          duration: 0.24,
           ease: 'power2.out'
         },
-        '-=0.22'
+        '-=0.18'
       )
       .to(
         preloader,
         {
           yPercent: -100,
-          duration: 0.58,
+          duration: curtainDuration,
           ease: 'expo.inOut'
         },
-        '+=0.18'
+        holdDelay
       );
   }
 
