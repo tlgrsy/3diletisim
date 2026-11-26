@@ -2855,24 +2855,10 @@ body.has-project-cursor .project-card__link {
   }
 }
 
-/* Reduced Motion Accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .site-preloader {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
-
-  .marquee__track {
-    animation: none;
-  }
-
-  *,
-  *::before,
-  *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-  }
+/* Smooth Marquee GPU Acceleration */
+.marquee__track {
+  will-change: transform;
+  animation: marquee-scroll 30s linear infinite;
 }
 
 

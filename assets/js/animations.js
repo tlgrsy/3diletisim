@@ -1,9 +1,7 @@
 /**
  * 3D İletişim Hizmetleri — GSAP 3.12+ Motion, Preloader & Smooth Scroll Engine
- * Built following official greensock/gsap-skills best practices:
- * - Single ScrollTrigger registration
- * - gsap.context() & gsap.matchMedia() for responsive & reduced-motion safety
- * - Custom SVG Barcode Logo Preloader with sessionStorage fast-navigation support
+ * - Official SVG Barcode Equalizer Preloader (~1.5s on homepage / fast curtain on subpages)
+ * - GSAP 3.12+ gsap.context() & gsap.matchMedia()
  * - Zero stuck opacity: 0 elements (once: true, immediateRender: false, clearProps)
  */
 
@@ -13,7 +11,7 @@
   const PRELOADER_SESSION_KEY = '3d_iletisim_preloader_seen';
 
   /* ------------------------------------------------------------------------
-     1. CUSTOM LOGO PRELOADER (SVG SPECTRUM BARS EQUALIZER + CURTAIN)
+     1. CUSTOM LOGO LOADER ANIMATION (24 SPECTRUM BARS EQUALIZER + CURTAIN)
      ------------------------------------------------------------------------ */
   function initLogoPreloader(onCompleteCallback) {
     const preloader = document.getElementById('site-preloader');
@@ -22,7 +20,6 @@
       return;
     }
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const hasGsap = typeof window.gsap !== 'undefined';
 
     const finishPreloader = () => {
@@ -35,25 +32,28 @@
       if (typeof onCompleteCallback === 'function') onCompleteCallback();
     };
 
-    if (prefersReducedMotion || !hasGsap) {
+    if (!hasGsap) {
       finishPreloader();
       return;
     }
 
     const gsap = window.gsap;
+    const path = window.location.pathname || '';
+    const isHomePage = path === '/' || path.endsWith('/index.html') || path === '';
     const alreadySeen = window.sessionStorage.getItem(PRELOADER_SESSION_KEY) === '1';
 
-    // Failsafe so the curtain can never trap the user
-    const failsafeTimer = window.setTimeout(finishPreloader, 2600);
+    // Failsafe so the curtain can never remain stuck
+    const failsafeTimer = window.setTimeout(finishPreloader, 3000);
 
     const bars = preloader.querySelectorAll('.logo-bar');
     const wordmark = preloader.querySelector('.logo-wordmark');
+    const caption = preloader.querySelector('.site-preloader__caption');
 
-    if (alreadySeen) {
-      // Fast curtain transition for subsequent internal page navigations
+    // On internal subpages after first entry, do a sleek fast curtain reveal
+    if (!isHomePage && alreadySeen) {
       gsap.to(preloader, {
         yPercent: -100,
-        duration: 0.42,
+        duration: 0.45,
         ease: 'expo.inOut',
         onComplete: () => {
           window.clearTimeout(failsafeTimer);
@@ -63,7 +63,7 @@
       return;
     }
 
-    // First entry: ~1.4s prestigious barcode equalizer + wordmark + curtain lift
+    // Full prestigious barcode equalizer loader animation (~1.5s)
     const tl = gsap.timeline({
       onComplete: () => {
         window.clearTimeout(failsafeTimer);
@@ -75,12 +75,13 @@
     });
 
     gsap.set(bars, { scaleY: 0, transformOrigin: '50% 100%' });
-    gsap.set(wordmark, { opacity: 0, y: 10 });
+    gsap.set(wordmark, { opacity: 0, y: 12 });
+    if (caption) gsap.set(caption, { opacity: 0, y: 8 });
 
     tl.to(bars, {
       scaleY: 1,
-      duration: 0.42,
-      stagger: 0.028,
+      duration: 0.45,
+      stagger: 0.032,
       ease: 'power3.out'
     })
       .to(
@@ -88,7 +89,17 @@
         {
           opacity: 1,
           y: 0,
-          duration: 0.32,
+          duration: 0.35,
+          ease: 'power2.out'
+        },
+        '-=0.22'
+      )
+      .to(
+        caption || {},
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.28,
           ease: 'power2.out'
         },
         '-=0.22'
@@ -97,10 +108,10 @@
         preloader,
         {
           yPercent: -100,
-          duration: 0.52,
+          duration: 0.58,
           ease: 'expo.inOut'
         },
-        '+=0.12'
+        '+=0.18'
       );
   }
 
@@ -108,9 +119,6 @@
      2. LENIS SMOOTH SCROLL + GSAP CONTEXT / MATCHMEDIA ENGINE
      ------------------------------------------------------------------------ */
   function initMotionEngine() {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
     const hasLenis = typeof window.Lenis !== 'undefined';
     const hasGsap = typeof window.gsap !== 'undefined';
     const hasScrollTrigger = typeof window.ScrollTrigger !== 'undefined';
@@ -162,12 +170,10 @@
       gsap.registerPlugin(window.ScrollTrigger);
     }
 
-    // Store context for clean lifecycle management (GSAP best practice)
     const mm = gsap.matchMedia();
 
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
+    mm.add('all', () => {
       const ctx = gsap.context(() => {
-        /* Hero / Subpage Hero Urbanist Typography Entrance */
         if (document.querySelector('.hero')) {
           const heroTl = gsap.timeline({
             defaults: { ease: 'power3.out', duration: 0.78, clearProps: 'transform,opacity' }
@@ -191,7 +197,6 @@
 
         if (!hasScrollTrigger) return;
 
-        /* Top-to-bottom ScrollTrigger section reveals (never stuck invisible) */
         gsap.utils.toArray('[data-reveal="fade-up"]').forEach((el) => {
           gsap.from(el, {
             y: 26,
@@ -208,7 +213,6 @@
           });
         });
 
-        /* Staggered grids */
         const staggerGroups = [
           { items: '.stat-card', trigger: '.stats-grid', stagger: 0.1 },
           { items: '.service-row', trigger: '.service-list', stagger: 0.045 },
@@ -236,7 +240,6 @@
           });
         });
 
-        /* Project cards reveal */
         gsap.utils.toArray('.project-card').forEach((card) => {
           gsap.from(card, {
             y: 28,
@@ -253,7 +256,6 @@
           });
         });
 
-        /* Footer wordmark reveal */
         const wordmark = document.querySelector('.footer-wordmark__text');
         if (wordmark) {
           gsap.from(wordmark, {
@@ -275,13 +277,12 @@
       return () => ctx.revert();
     });
 
-    /* Desktop-only smooth scrub image parallax (gsap.matchMedia best practice) */
-    mm.add('(min-width: 921px) and (prefers-reduced-motion: no-preference)', () => {
+    /* Desktop-only smooth scrub image parallax */
+    mm.add('(min-width: 921px)', () => {
       if (!hasScrollTrigger) return;
 
       const ctx = gsap.context(() => {
         gsap.utils.toArray('.has-image > img').forEach((img) => {
-          // Skip hero slide images and live service preview image
           if (img.closest('.hero-slider') || img.id === 'service-preview-img') return;
           gsap.fromTo(
             img,
@@ -304,7 +305,6 @@
       return () => ctx.revert();
     });
 
-    // Refresh ScrollTrigger after web fonts finish loading
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => {
         if (hasScrollTrigger) window.ScrollTrigger.refresh();
