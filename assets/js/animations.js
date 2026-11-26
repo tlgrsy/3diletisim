@@ -27,6 +27,9 @@
 
     const finishPreloader = () => {
       preloader.classList.add('is-done');
+      preloader.style.display = 'none';
+      preloader.style.visibility = 'hidden';
+      preloader.style.pointerEvents = 'none';
       preloader.setAttribute('aria-hidden', 'true');
       document.documentElement.classList.remove('is-preloading');
       if (typeof onCompleteCallback === 'function') onCompleteCallback();
@@ -278,8 +281,8 @@
 
       const ctx = gsap.context(() => {
         gsap.utils.toArray('.has-image > img').forEach((img) => {
-          // Skip hero slide images to keep drag slider crisp
-          if (img.closest('.hero-slider')) return;
+          // Skip hero slide images and live service preview image
+          if (img.closest('.hero-slider') || img.id === 'service-preview-img') return;
           gsap.fromTo(
             img,
             { yPercent: -4, scale: 1.07 },

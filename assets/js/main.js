@@ -210,8 +210,12 @@
       const imgSrc = row.dataset.serviceImg || '';
 
       if (previewImg && imgSrc && previewImg.getAttribute('src') !== imgSrc) {
-        previewImg.setAttribute('src', imgSrc);
-        previewImg.setAttribute('alt', `${title} — 3D İletişim Hizmetleri`);
+        previewImg.style.opacity = '0.35';
+        window.setTimeout(() => {
+          previewImg.setAttribute('src', imgSrc);
+          previewImg.setAttribute('alt', `${title} — 3D İletişim Hizmetleri`);
+          previewImg.style.opacity = '1';
+        }, 110);
       }
 
       if (previewCode) previewCode.textContent = `HİZMET ${num} / 08`;

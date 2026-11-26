@@ -92,7 +92,7 @@ html {
   text-rendering: optimizeLegibility;
   background-color: var(--color-bg-light);
   color: var(--color-ink-dark);
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100%;
 }
 
@@ -120,7 +120,7 @@ body {
   line-height: 1.65;
   color: var(--color-ink-dark);
   background-color: var(--color-bg-light);
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100%;
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -649,6 +649,7 @@ h3 {
   justify-content: space-between;
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transform: translateY(-12px);
   transition: opacity var(--transition-base), visibility var(--transition-base), transform var(--transition-base);
 }
@@ -656,6 +657,7 @@ h3 {
 .mobile-drawer.is-open {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
   transform: translateY(0);
 }
 
@@ -2906,7 +2908,7 @@ body.has-project-cursor .project-card__link {
 }
 
 .brand-logo__img {
-  height: 46px;
+  height: 52px;
   width: auto;
   display: block;
   transition: transform var(--transition-fast);
@@ -2921,7 +2923,7 @@ body.has-project-cursor .project-card__link {
 }
 
 .footer-brand__img {
-  height: 54px;
+  height: 64px;
   width: auto;
   display: block;
 }
@@ -2931,8 +2933,13 @@ body.has-project-cursor .project-card__link {
 }
 
 .contact-brand-lockup img {
-  height: 52px;
+  height: 56px;
   width: auto;
+}
+
+/* Smooth Service Preview Image Switch */
+#service-preview-img {
+  transition: opacity 0.28s ease, transform var(--transition-slow);
 }
 
 /* Prestigious SVG Barcode Logo Preloader */
@@ -2951,8 +2958,9 @@ body.has-project-cursor .project-card__link {
 }
 
 .site-preloader.is-done {
-  display: none;
-  pointer-events: none;
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .site-preloader__logo {
@@ -3022,10 +3030,10 @@ body.has-project-cursor .project-card__link {
 
 @media (max-width: 640px) {
   .brand-logo__img {
-    height: 38px;
+    height: 42px;
   }
 
   .footer-brand__img {
-    height: 46px;
+    height: 54px;
   }
 }
