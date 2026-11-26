@@ -312,9 +312,15 @@
     }
   }
 
-  window.addEventListener('load', () => {
+  function boot() {
     initLogoPreloader(() => {
       initMotionEngine();
     });
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();

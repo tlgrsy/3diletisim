@@ -2857,6 +2857,12 @@ body.has-project-cursor .project-card__link {
 
 /* Reduced Motion Accessibility */
 @media (prefers-reduced-motion: reduce) {
+  .site-preloader {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
   .marquee__track {
     animation: none;
   }
